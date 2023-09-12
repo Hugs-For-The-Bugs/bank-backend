@@ -8,7 +8,8 @@ import (
 )
 
 type UserForm struct {
-	socialSecurityNumber string `json:"socialSecurityNumber"`
+	ID                   uint64 `gorm:"primary"`
+	SocialSecurityNumber string `json:"socialSecurityNumber"`
 	Password             string `json:"password"`
 }
 
@@ -21,18 +22,16 @@ func Login(c *gin.Context) {
 	}
 	fmt.Println(userForm)
 
-	if userForm.socialSecurityNumber != "admin" || userForm.Password != "admin" {
+	if userForm.SocialSecurityNumber != "admin" || userForm.Password != "admin" {
 		c.JSON(200, gin.H{
-			"code": 1,
-			"msg":  "Incorrect socialSecurityNumber or password",
+			"id": userForm.ID,
 		})
 		return
 	}
 	session := sessions.Default(c)
-	session.Set("user", userForm.socialSecurityNumber)
+	session.Set("user", userForm.SocialSecurityNumber)
 	session.Save()
 	c.JSON(200, gin.H{
-		"code": 0,
-		"msg":  "login successfully",
+		"id": userForm.ID,
 	})
 }
