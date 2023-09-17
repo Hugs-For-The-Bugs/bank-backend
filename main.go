@@ -3,6 +3,7 @@ package main
 import (
 	"hugsforthebugs/bank-backend/controller"
 	"hugsforthebugs/bank-backend/middleware"
+	"hugsforthebugs/bank-backend/util"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -10,14 +11,14 @@ import (
 )
 
 func main() {
+	util.InitDB()
 	router := gin.Default()
 	router.Use(sessions.Sessions("SESSIONID", cookie.NewStore([]byte("secret"))))
 	//login
-	router.POST("/api/login", controller.Login)
+	router.POST("/login", controller.Login)
 	r := router.Group("/api")
 	{
 		r.Use(middleware.AuthCheck)
-
 	}
 
 	// test api
