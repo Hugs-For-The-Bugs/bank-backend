@@ -1,18 +1,17 @@
 package main
 
 import (
+	"hugsforthebugs/bank-backend/controller"
+	"hugsforthebugs/bank-backend/util"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	util.InitDB()
 	router := gin.Default()
 
-	// test api
-	router.GET("/t", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello, World!",
-		})
-	})
+	router.POST("/account", controller.CreateAccount)
 
 	router.Run("localhost:8080")
 }
