@@ -22,8 +22,7 @@ func CreateAccount(c *gin.Context) {
 	err := c.BindJSON(&account)
 	fmt.Println(err)
 	//store into the database
-	defer db.Close()
-	db.Create(&account)
+
 	//return data
 	c.JSON(200, gin.H{
 		"id":                   account.ID,
