@@ -21,12 +21,8 @@ func main() {
 		r.Use(middleware.AuthCheck)
 	}
 
-	// test api
-	router.GET("/test", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello, World!",
-		})
-	})
+	api := router.Group("/api")
+	api.GET("/account/:ID", controller.GetAccount)
 
 	router.Run("localhost:8080")
 }
