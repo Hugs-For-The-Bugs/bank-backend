@@ -13,21 +13,12 @@ func CreateAccount(c *gin.Context) {
 	var account model.Account
 	err := c.BindJSON(&account)
 	fmt.Println(err)
-	//store into the database
-	//util.DB.AutoMigrate(&Account{})
+	// store into the database
 	result := util.DB.Create(&account)
-	//return data
+	// return data
 	if result.Error == nil && result.RowsAffected == 1 {
-		c.JSON(200, gin.H{
-			"id":                   account.ID,
-			"socialSecurityNumber": account.SocialSecurityNumber,
-			"firstName":            account.FirstName,
-			"surname":              account.Surname,
-			"birthday":             account.Birthday,
-			"phone":                account.Phone,
-			"email":                account.Email,
-		})
+		util.SuccessResponse(c, account)
 	} else {
-		c.JSON(400, gin.H{})
+		util.BadRequestResponse(c, "bad request")
 	}
 }

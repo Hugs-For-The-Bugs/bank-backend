@@ -15,17 +15,8 @@ func GetAccount(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("ID"))
 	result := util.DB.First(&account, "id =?", id)
 	if result.Error == nil && result.RowsAffected == 1 {
-		c.JSON(200, gin.H{
-			"id":                   account.ID,
-			"socialSecurityNumber": account.SocialSecurityNumber,
-			"firstName":            account.FirstName,
-			"surname":              account.Surname,
-			"birthday":             account.Birthday,
-			"phone":                account.Phone,
-			"email":                account.Email,
-			"balance":              account.Balance,
-		})
+		util.SuccessResponse(c, account)
 	} else {
-		c.JSON(400, gin.H{})
+		util.BadRequestResponse(c, "bad request")
 	}
 }
