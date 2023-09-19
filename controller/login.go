@@ -14,6 +14,10 @@ type LoginRequest struct {
 	Password             string `json:"password"`
 }
 
+type responseData struct {
+	ID uint64 `json:"id"`
+}
+
 // Login login and store session
 func Login(c *gin.Context) {
 	var loginRequest LoginRequest
@@ -23,49 +27,28 @@ func Login(c *gin.Context) {
 		fmt.Println(err)
 	}
 
-	session := sessions.Default(c)
-	sessionPassword := session.Get("password")
-	if sessionPassword != nil && sessionPassword == loginRequest.Password {
+	result := util.DB.Where(map[string]interface{}{
+		"social_security_number": loginRequest.SocialSecurityNumber,
+	}).Find(&account)
 
-		result := util.DB.Where(map[string]interface{}{
-			"social_security_number": loginRequest.SocialSecurityNumber,
-		}).Find(&account)
-
-		if result.RowsAffected == 0 {
-			c.JSON(400, gin.H{})
-		} else if result.Error != nil {
-			c.JSON(500, gin.H{})
-		} else {
-			c.JSON(200, gin.H{
-				"code": 0,
-				"id":   account.ID,
-			})
-		}
+	if result.RowsAffected == 0 {
+		fmt.Println(result)
+		util.BadRequestResponse(c, "account not found")
+	} else if result.Error != nil {
+		util.ServerErrorResponse(c, result.Error.Error())
+	} else if account.Password != loginRequest.Password {
+		util.BadRequestResponse(c, "password error")
 	} else {
-		result := util.DB.Where(map[string]interface{}{
-			"social_security_number": loginRequest.SocialSecurityNumber,
-		}).Find(&account)
-
-		if result.RowsAffected == 0 {
-			fmt.Println(result)
-			c.JSON(400, gin.H{
-				"msg": "user not found",
-			})
-		} else if result.Error != nil {
-			c.JSON(500, gin.H{
-				"msg": result.Error.Error(),
-			})
-		} else if account.Password != loginRequest.Password {
-			c.JSON(400, gin.H{
-				"msg": "password error",
-			})
-		} else {
-			session.Set("password", account.Password)
-			session.Save()
-			c.JSON(200, gin.H{
-				"id": account.ID,
-			})
+		session := sessions.Default(c)
+		session.Set("password", account.Password)
+		err := session.Save()
+		if err != nil {
+			return
 		}
+		responseData := responseData{
+			ID: account.ID,
+		}
+		util.SuccessResponse(c, responseData)
 	}
 
 }
