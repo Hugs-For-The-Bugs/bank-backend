@@ -33,7 +33,7 @@ func Login(c *gin.Context) {
 	if sessionPassword != nil && sessionPassword == loginRequest.Password {
 
 		result := util.DB.Where(map[string]interface{}{
-			"ssn": loginRequest.SocialSecurityNumber,
+			"social_security_number": loginRequest.SocialSecurityNumber,
 		}).Find(&user)
 		if result.RowsAffected == 0 {
 			fmt.Println(result)
@@ -43,7 +43,8 @@ func Login(c *gin.Context) {
 			return
 		} else {
 			c.JSON(200, gin.H{
-				"id": user.ID,
+				"code": 0,
+				"id":   user.ID,
 			})
 			return
 		}
@@ -51,7 +52,7 @@ func Login(c *gin.Context) {
 	}
 
 	result := util.DB.Where(map[string]interface{}{
-		"ssn": loginRequest.SocialSecurityNumber,
+		"social_security_number": loginRequest.SocialSecurityNumber,
 	}).Find(&user)
 	if result.RowsAffected == 0 {
 		fmt.Println(result)

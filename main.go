@@ -15,7 +15,7 @@ func main() {
 	router := gin.Default()
 	router.Use(sessions.Sessions("SESSIONID", cookie.NewStore([]byte("secret"))))
 	//login
-	router.POST("/login", controller.Login)
+	router.POST("/api/login", controller.Login)
 	r := router.Group("/api")
 	{
 		r.Use(middleware.AuthCheck)
