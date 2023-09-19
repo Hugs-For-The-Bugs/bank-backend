@@ -38,5 +38,7 @@ func CreateAccount(c *gin.Context) {
 			"phone":                account.Phone,
 			"email":                account.Email,
 		})
+	} else {
+		c.JSON(400, gin.H{})
 	}
 }
