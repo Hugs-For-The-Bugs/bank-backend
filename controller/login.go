@@ -54,33 +54,25 @@ func Login(c *gin.Context) {
 	result := util.DB.Where(map[string]interface{}{
 		"social_security_number": loginRequest.SocialSecurityNumber,
 	}).Find(&user)
+
 	if result.RowsAffected == 0 {
 		fmt.Println(result)
-		c.JSON(200, gin.H{
-			"code": 1,
-			"msg":  "user not found",
+		c.JSON(400, gin.H{
+			"msg": "user not found",
 		})
-		return
 	} else if result.Error != nil {
-		c.JSON(200, gin.H{
-			"code": 1,
-			"msg":  result.Error.Error(),
+		c.JSON(500, gin.H{
+			"msg": result.Error.Error(),
 		})
-		return
+	} else if user.Password != loginRequest.Password {
+		c.JSON(400, gin.H{
+			"msg": "password error",
+		})
 	} else {
-		if user.Password != loginRequest.Password {
-			c.JSON(200, gin.H{
-				"code": 1,
-				"msg":  "password error",
-			})
-			return
-		}
-
 		session.Set("password", user.Password)
 		session.Save()
 		c.JSON(200, gin.H{
 			"id": user.ID,
 		})
-		return
 	}
 }
