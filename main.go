@@ -11,7 +11,8 @@ func main() {
 	util.InitDB()
 	router := gin.Default()
 
-	router.POST("/account", controller.CreateAccount)
+	api := router.Group("api")
+	api.POST("/account", controller.CreateAccount)
 
 	router.Run("localhost:8080")
 }

@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 
+	"hugsforthebugs/bank-backend/util"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +17,7 @@ type Account struct {
 	Phone                string `json:"phone"`
 	SocialSecurityNumber string `json:"socialSecurityNumber"`
 	Surname              string `json:"surname"`
+	Balance              *int   `gorm:"default:0"`
 }
 
 func CreateAccount(c *gin.Context) {
@@ -22,15 +25,18 @@ func CreateAccount(c *gin.Context) {
 	err := c.BindJSON(&account)
 	fmt.Println(err)
 	//store into the database
-
+	//util.DB.AutoMigrate(&Account{})
+	result := util.DB.Create(&account)
 	//return data
-	c.JSON(200, gin.H{
-		"id":                   account.ID,
-		"socialSecurityNumber": account.SocialSecurityNumber,
-		"firstName":            account.FirstName,
-		"surname":              account.Surname,
-		"birthday":             account.Birthday,
-		"phone":                account.Phone,
-		"email":                account.Email,
-	})
+	if result.Error == nil && result.RowsAffected == 1 {
+		c.JSON(200, gin.H{
+			"id":                   account.ID,
+			"socialSecurityNumber": account.SocialSecurityNumber,
+			"firstName":            account.FirstName,
+			"surname":              account.Surname,
+			"birthday":             account.Birthday,
+			"phone":                account.Phone,
+			"email":                account.Email,
+		})
+	}
 }
