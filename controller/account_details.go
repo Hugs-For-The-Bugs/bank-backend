@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"hugsforthebugs/bank-backend/util"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -15,19 +16,26 @@ type Account struct {
 	Phone                string `json:"phone"`
 	SocialSecurityNumber string `json:"socialSecurityNumber"`
 	Surname              string `json:"surname"`
+	Balance              *int   `gorm:"default:0"`
 }
 
 func GetAccount(c *gin.Context) {
 	//TO-DO: Fetch the user data from the database
-	//result :=FetchUserData()
+	var account Account
 	id, _ := strconv.Atoi(c.Param("ID"))
-	c.JSON(200, gin.H{
-		"id":                   id,
-		"socialSecurityNumber": "20000101-0000",
-		"firstName":            "Lambo",
-		"surname":              "Zhuang",
-		"birthday":             "20000101",
-		"phone":                "0123456789",
-		"email":                "example@gmail.com",
-	})
+	result := util.DB.First(&account, "id =?", id)
+	if result.Error == nil && result.RowsAffected == 1 {
+		c.JSON(200, gin.H{
+			"id":                   account.ID,
+			"socialSecurityNumber": account.SocialSecurityNumber,
+			"firstName":            account.FirstName,
+			"surname":              account.Surname,
+			"birthday":             account.Birthday,
+			"phone":                account.Phone,
+			"email":                account.Email,
+			"balance":              account.Balance,
+		})
+	} else {
+		c.JSON(400, gin.H{})
+	}
 }

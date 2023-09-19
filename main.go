@@ -11,7 +11,8 @@ func main() {
 	util.InitDB()
 	router := gin.Default()
 
-	router.GET("/account/:ID", controller.GetAccount)
+	api := router.Group("/api")
+	api.GET("/account/:ID", controller.GetAccount)
 
 	router.Run("localhost:8080")
 }
