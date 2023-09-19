@@ -21,7 +21,8 @@ func main() {
 		r.Use(middleware.AuthCheck)
 	}
 
-	api := router.Group("/api")
+	api := router.Group("api")
+	api.POST("/account", controller.CreateAccount)
 	api.GET("/account/:ID", controller.GetAccount)
 
 	router.Run("localhost:8080")
