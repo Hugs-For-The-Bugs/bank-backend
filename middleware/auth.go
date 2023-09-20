@@ -7,9 +7,9 @@ import (
 
 func LoginCheck(c *gin.Context) {
 	session := sessions.Default(c)
-	socialSecurityNumber := session.Get("id")
+	id := session.Get("id")
 
-	if socialSecurityNumber == nil {
+	if id == nil {
 		c.JSON(400, gin.H{
 			"msg": "not login",
 		})

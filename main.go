@@ -19,7 +19,7 @@ func main() {
 	{
 		r.Use(middleware.LoginCheck)
 		r.POST("/account", controller.CreateAccount)
-		r.GET("/account/:ID", controller.GetAccount)
+		r.GET("/account", controller.GetAccount)
 	}
 
 	// Start the server

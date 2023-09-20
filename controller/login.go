@@ -40,7 +40,7 @@ func Login(c *gin.Context) {
 		util.BadRequestResponse(c, "password error")
 	} else {
 		session := sessions.Default(c)
-		session.Set("ssn", account.SocialSecurityNumber)
+		session.Set("id", account.ID)
 		err := session.Save()
 		if err != nil {
 			return
