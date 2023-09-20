@@ -14,15 +14,13 @@ func main() {
 	util.InitDB()
 	router := gin.Default()
 	router.Use(sessions.Sessions("SESSIONID", cookie.NewStore([]byte("secret"))))
-	//login
 	router.POST("/api/login", controller.Login)
 	r := router.Group("/api")
 	{
-		r.Use(middleware.AuthCheck)
+		r.Use(middleware.LoginCheck)
 		r.POST("/account", controller.CreateAccount)
 		r.GET("/account/:ID", controller.GetAccount)
 	}
-
 
 	// Start the server
 	err := router.Run("localhost:8080")
