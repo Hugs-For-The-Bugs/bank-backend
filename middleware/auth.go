@@ -10,11 +10,10 @@ import (
 
 func AuthCheck(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get("user")
-	if user == nil || user != "admin" {
-		c.JSON(200, gin.H{
-			"code": 1,
-			"msg":  "not login",
+	socialSecurityNumber := session.Get("ssn")
+	if socialSecurityNumber == nil {
+		c.JSON(400, gin.H{
+			"msg": "not login",
 		})
 		c.Abort()
 	}
