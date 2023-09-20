@@ -19,10 +19,10 @@ func main() {
 	r := router.Group("/api")
 	{
 		r.Use(middleware.AuthCheck)
-
-		//r.GET("/account/:id", controller.GetAccount)
-
+		r.POST("/account", controller.CreateAccount)
+		r.GET("/account/:ID", controller.GetAccount)
 	}
+
 
 	// Start the server
 	err := router.Run("localhost:8080")

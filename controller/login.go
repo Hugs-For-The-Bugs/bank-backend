@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"hugsforthebugs/bank-backend/model"
 	"hugsforthebugs/bank-backend/util"
 
 	"github.com/gin-contrib/sessions"
@@ -13,66 +14,41 @@ type LoginRequest struct {
 	Password             string `json:"password"`
 }
 
-type Account struct {
-	ID                   uint `gorm:"primarykey"`
-	SocialSecurityNumber string
-	Password             string
+type responseData struct {
+	ID uint64 `json:"id"`
 }
 
 // Login login and store session
 func Login(c *gin.Context) {
 	var loginRequest LoginRequest
-	var user Account
+	var account model.Account
 	err := c.BindJSON(&loginRequest)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	session := sessions.Default(c)
-	sessionPassword := session.Get("password")
-	if sessionPassword != nil && sessionPassword == loginRequest.Password {
-
-		result := util.DB.Where(map[string]interface{}{
-			"social_security_number": loginRequest.SocialSecurityNumber,
-		}).Find(&user)
-		if result.RowsAffected == 0 {
-			fmt.Println(result)
-			return
-		} else if result.Error != nil {
-			fmt.Println(result.Error.Error())
-			return
-		} else {
-			c.JSON(200, gin.H{
-				"code": 0,
-				"id":   user.ID,
-			})
-			return
-		}
-
-	}
-
 	result := util.DB.Where(map[string]interface{}{
 		"social_security_number": loginRequest.SocialSecurityNumber,
-	}).Find(&user)
+	}).Find(&account)
 
 	if result.RowsAffected == 0 {
 		fmt.Println(result)
-		c.JSON(400, gin.H{
-			"msg": "user not found",
-		})
+		util.BadRequestResponse(c, "account not found")
 	} else if result.Error != nil {
-		c.JSON(500, gin.H{
-			"msg": result.Error.Error(),
-		})
-	} else if user.Password != loginRequest.Password {
-		c.JSON(400, gin.H{
-			"msg": "password error",
-		})
+		util.ServerErrorResponse(c, result.Error.Error())
+	} else if account.Password != loginRequest.Password {
+		util.BadRequestResponse(c, "password error")
 	} else {
-		session.Set("password", user.Password)
-		session.Save()
-		c.JSON(200, gin.H{
-			"id": user.ID,
-		})
+		session := sessions.Default(c)
+		session.Set("password", account.Password)
+		err := session.Save()
+		if err != nil {
+			return
+		}
+		responseData := responseData{
+			ID: account.ID,
+		}
+		util.SuccessResponse(c, responseData)
 	}
+
 }

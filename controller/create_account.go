@@ -1,19 +1,21 @@
 package controller
 
 import (
-	"strconv"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
 
 	"hugsforthebugs/bank-backend/model"
 	"hugsforthebugs/bank-backend/util"
-
-	"github.com/gin-gonic/gin"
 )
 
-func GetAccount(c *gin.Context) {
-	//TO-DO: Fetch the user data from the database
+func CreateAccount(c *gin.Context) {
 	var account model.Account
-	id, _ := strconv.Atoi(c.Param("ID"))
-	result := util.DB.First(&account, "id =?", id)
+	err := c.BindJSON(&account)
+	fmt.Println(err)
+	// store into the database
+	result := util.DB.Create(&account)
+	// return data
 	if result.Error == nil && result.RowsAffected == 1 {
 		util.SuccessResponse(c, account)
 	} else {
