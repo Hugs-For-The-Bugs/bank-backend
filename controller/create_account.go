@@ -19,6 +19,6 @@ func CreateAccount(c *gin.Context) {
 	if result.RowsAffected == 1 {
 		util.SuccessResponse(c, account)
 	} else {
-		util.BadRequestResponse(c, "account exists")
+		util.BadRequestResponse(c, "Account already exists")
 	}
 }

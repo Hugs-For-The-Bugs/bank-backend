@@ -9,5 +9,5 @@ type Account struct {
 	Phone                string `json:"phone"`
 	SocialSecurityNumber string `json:"socialSecurityNumber"`
 	Surname              string `json:"surname"`
-	Balance              *int   `gorm:"default:0"`
+	Balance              *int   `gorm:"default:0" json:"balance"`
 }
