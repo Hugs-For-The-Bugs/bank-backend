@@ -15,10 +15,10 @@ func main() {
 	router := gin.Default()
 	router.Use(sessions.Sessions("SESSIONID", cookie.NewStore([]byte("secret"))))
 	router.POST("/api/login", controller.Login)
+	router.POST("/api/account", controller.CreateAccount)
 	r := router.Group("/api")
 	{
 		r.Use(middleware.LoginCheck)
-		r.POST("/account", controller.CreateAccount)
 		r.GET("/account", controller.GetAccount)
 	}
 

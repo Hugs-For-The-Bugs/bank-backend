@@ -16,9 +16,10 @@ func CreateAccount(c *gin.Context) {
 	// store into the database
 	result := util.DB.Create(&account)
 	// return data
-	if result.Error == nil && result.RowsAffected == 1 {
+	fmt.Println(result)
+	if result.RowsAffected == 1 {
 		util.SuccessResponse(c, account)
 	} else {
-		util.BadRequestResponse(c, "bad request")
+		util.BadRequestResponse(c, "account exists")
 	}
 }
