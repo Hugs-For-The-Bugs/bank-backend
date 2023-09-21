@@ -33,11 +33,11 @@ func Login(c *gin.Context) {
 
 	if result.RowsAffected == 0 {
 		fmt.Println(result)
-		util.BadRequestResponse(c, "account not found")
+		util.BadRequestResponse(c, "Account not found")
 	} else if result.Error != nil {
 		util.ServerErrorResponse(c, result.Error.Error())
 	} else if account.Password != loginRequest.Password {
-		util.BadRequestResponse(c, "password error")
+		util.BadRequestResponse(c, "Password incorrect")
 	} else {
 		session := sessions.Default(c)
 		session.Set("id", account.ID)
