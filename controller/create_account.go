@@ -13,9 +13,8 @@ func CreateAccount(c *gin.Context) {
 	var account model.Account
 	err := c.BindJSON(&account)
 	fmt.Println(err)
-	// store into the database
+	account.Password = util.HashPassword(account.Password)
 	result := util.DB.Create(&account)
-	// return data
 	fmt.Println(result)
 	if result.RowsAffected == 1 {
 		util.SuccessResponse(c, account)

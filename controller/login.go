@@ -36,7 +36,7 @@ func Login(c *gin.Context) {
 		util.BadRequestResponse(c, "Account not found")
 	} else if result.Error != nil {
 		util.ServerErrorResponse(c, result.Error.Error())
-	} else if account.Password != loginRequest.Password {
+	} else if !util.CheckPasswordHash(loginRequest.Password, account.Password) {
 		util.BadRequestResponse(c, "Password incorrect")
 	} else {
 		session := sessions.Default(c)
