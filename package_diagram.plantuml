@@ -1,0 +1,69 @@
+@startuml
+!define RECTANGLE class
+
+package "main" {
+  RECTANGLE main {
+    +main()
+  }
+}
+
+package "route" {
+  RECTANGLE route {
+    +SetupRouter() gin.IRouter
+  }
+}
+
+package "controller" {
+  RECTANGLE controller {
+    +LoginRequest struct
+    -responseData struct
+    +GetAccount(c *gin.Context)
+    +CreateAccount(c *gin.Context)
+    +Login(c *gin.Context)
+    +EditAccount(c *gin.Context)
+    +DeleteAccount(c *gin.Context)
+    +Logout(c *gin.Context)
+    +GetTransaction(c *gin.Context)
+    +CreateTransaction(c *gin.Context)
+    +EnableAccount(c *gin.Context)
+    +DisableAccount(c *gin.Context)
+    +GetAccounts(c *gin.Context)
+  }
+}
+
+package "model" {
+  RECTANGLE model {
+    +Account struct
+    +Transaction struct
+    +Admin struct
+  }
+}
+
+package "middleware" {
+  RECTANGLE middleware {
+    +LoginCheck()
+    +AuthCheck()
+  }
+}
+
+package "util" {
+  RECTANGLE util {
+    +DBConfig struct
+    +InitDB()
+    +HashPassword()
+    +CheckPasswordHash()
+    +SuccessResponse()
+    +BadRequestResponse()
+    +ServerErrorResponse()
+  }
+}
+
+main --> route
+route --> controller
+controller --> model
+route --> middleware
+main --> util
+controller --> util
+middleware --> util
+
+@enduml
