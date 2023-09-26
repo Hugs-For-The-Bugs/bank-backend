@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   birthday VARCHAR(10),
   phone VARCHAR(15),
   email VARCHAR(50),
-  ssn VARCHAR(14) UNIQUE,
+  social_security_number VARCHAR(14) UNIQUE,
   password VARCHAR(50),
   balance VARCHAR(50),
   active BOOLEAN
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- Insert data into account table
-INSERT INTO accounts (first_name, surname, birthday, phone, email, ssn, password, balance, active) VALUES
+INSERT INTO accounts (first_name, surname, birthday, phone, email, social_security_number, password, balance, active) VALUES
 ('John', 'Doe', '19900101', '1234567890', 'john@email.com', '199001011234', '7c6a180b36896a0a8c02787eeafb0e4c', '1000', true), -- password1
 ('Jane', 'Doe', '19910202', '0987654321', 'jane@email.com', '199102022345', '6cb75f652a9b52798eb6cf2201057c73', '2000', true), -- password2
 ('Alice', 'Smith', '19850303', '1122334455', 'alice@email.com', '198503033456', '819b0643d6b89dc9b579fdfc9094f28e', '3000', false), -- password3
