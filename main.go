@@ -20,6 +20,7 @@ func main() {
 	{
 		r.Use(middleware.LoginCheck)
 		r.GET("/account", controller.GetAccount)
+		r.DELETE("/account", controller.DeactivateAccount)
 	}
 
 	// Start the server
