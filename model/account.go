@@ -10,4 +10,5 @@ type Account struct {
 	SocialSecurityNumber string `json:"socialSecurityNumber"`
 	Surname              string `json:"surname"`
 	Balance              *int   `gorm:"default:0" json:"balance"`
+	Active               bool   `gorm:"default:false" json:"active"`
 }
