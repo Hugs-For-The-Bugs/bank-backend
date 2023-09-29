@@ -58,3 +58,4 @@ INSERT INTO transactions (from_account_id, to_account_id, amount, type, state) V
 -- Insert data into admins table
 INSERT INTO admins (username, password) VALUES
 ('admin', '21232f297a57a5a743894a0e4a801fc3');
+
