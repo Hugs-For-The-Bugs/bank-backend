@@ -14,7 +14,6 @@ func DeactivateAccount(c *gin.Context) {
 	id := session.Get("id")
 	result := util.DB.Select("balance").Find(&account).Where("id = ?", id).Scan(&account)
 	if result.Error == nil && result.RowsAffected == 1 {
-		//fmt.Print(*account.Balance)
 		if *account.Balance == 0 {
 			util.DB.Model(&account).Where("id = ?", id).Update("active", 0)
 			util.SuccessResponse(c, account)
