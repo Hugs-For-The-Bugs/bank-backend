@@ -20,13 +20,9 @@ func EditAccount(c *gin.Context) {
 
 	session := sessions.Default(c)
 	id := session.Get("id")
-	//fmt.Println(id)
 
-	//print all info
-	//fmt.Println(account)
 	result := util.DB.Model(&model.Account{}).Where("id = ?", id).Updates(&account)
 	if result.Error == nil && result.RowsAffected == 1 {
-		//only return THE account json, or should I return the full line that was updated?
 		util.SuccessResponse(c, account)
 	} else {
 		util.BadRequestResponse(c, "bad request")
