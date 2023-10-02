@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS transactions (
   from_account_id INT,
   to_account_id INT,
   amount VARCHAR(50),
-  type ENUM('Transfer', 'Withdraw', 'Deposit'),
   state ENUM('Failed', 'Successful'),
   transaction_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (from_account_id) REFERENCES accounts(id),
@@ -49,12 +48,12 @@ INSERT INTO accounts (first_name, surname, birthday, phone, email, social_securi
 ('Tom', 'Cruise', '1962-07-03', '9191919191', 'tom@email.com', '196207035678', 'db0edd04aaac4506f7edab03ac855d56', '5000', true, NOW(), NOW());
 
 -- Insert data into transactions table with datetime
-INSERT INTO transactions (from_account_id, to_account_id, amount, type, state, transaction_datetime) VALUES
-(1, 2, '100', 'Transfer', 'Successful', '2023-09-29 12:34:56'),
-(2, 3, '50', 'Transfer', 'Failed', '2023-09-29 12:35:00'),
-(3, 4, '200', 'Withdraw', 'Successful', '2023-09-29 12:36:00'),
-(4, 5, '300', 'Deposit', 'Failed', '2023-09-29 12:37:00'),
-(5, 1, '400', 'Transfer', 'Successful', '2023-09-29 12:38:00');
+INSERT INTO transactions (from_account_id, to_account_id, amount, state, transaction_datetime) VALUES
+(1, 2, '100', 'Successful', '2023-09-29 12:34:56'),
+(2, 3, '50', 'Failed', '2023-09-29 12:35:00'),
+(3, 4, '200', 'Successful', '2023-09-29 12:36:00'),
+(4, 5, '300', 'Failed', '2023-09-29 12:37:00'),
+(5, 1, '400', 'Successful', '2023-09-29 12:38:00');
 
 -- Insert data into admins table
 INSERT INTO admins (username, password) VALUES
