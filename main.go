@@ -16,10 +16,12 @@ func main() {
 	router.Use(sessions.Sessions("SESSIONID", cookie.NewStore([]byte("secret"))))
 	router.POST("/api/login", controller.Login)
 	router.POST("/api/account", controller.CreateAccount)
+
 	r := router.Group("/api")
 	{
 		r.Use(middleware.LoginCheck)
 		r.GET("/account", controller.GetAccount)
+		r.GET("/transaction", controller.GetTransactions)
 	}
 
 	// Start the server
