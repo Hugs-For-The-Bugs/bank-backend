@@ -16,6 +16,5 @@ func Logout(c *gin.Context) {
 		return
 	}
 
-	util.SuccessResponse(c, nil)
 	util.SuccessResponse(c, "Logout successfully")
 }
