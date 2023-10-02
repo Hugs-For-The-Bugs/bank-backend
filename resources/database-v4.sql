@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   amount VARCHAR(50),
   type ENUM('Transfer', 'Withdraw', 'Deposit'),
   state ENUM('Failed', 'Successful'),
-  transaction_datetime DATETIME,
+  transaction_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (from_account_id) REFERENCES accounts(id),
   FOREIGN KEY (to_account_id) REFERENCES accounts(id)
 );
