@@ -22,7 +22,7 @@ func InitDB() {
 		Hostname: "localhost",
 		Port:     "3306",
 		Username: "root",
-		Password: "",
+		Password: "6024412200705wht",
 		DBName:   "bank",
 	}
 	dsn := fmt.Sprintf(
