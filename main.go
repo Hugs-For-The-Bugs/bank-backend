@@ -22,6 +22,7 @@ func main() {
 		r.Use(middleware.LoginCheck)
 		r.GET("/account", controller.GetAccount)
 		r.GET("/transaction", controller.GetTransactions)
+
 	}
 
 	// Start the server
