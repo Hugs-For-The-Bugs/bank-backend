@@ -16,6 +16,11 @@ func DeactivateAccount(c *gin.Context) {
 	if result.Error == nil && result.RowsAffected == 1 {
 		if *account.Balance == 0 {
 			util.DB.Model(&account).Where("id = ?", id).Update("active", 0)
+			session.Delete("id")
+			err := session.Save()
+			if err != nil {
+				return
+			}
 			util.SuccessResponse(c, account)
 		} else {
 			util.BadRequestResponse(c, "Your balance is not 0, cannot deactivate account.")
