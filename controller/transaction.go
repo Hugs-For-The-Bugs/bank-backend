@@ -60,7 +60,7 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	if fromAccount.Balance <= request.Amount {
+	if fromAccount.Balance < request.Amount {
 		tx.Rollback()
 		util.BadRequestResponse(c, "Insufficient balance")
 		return
