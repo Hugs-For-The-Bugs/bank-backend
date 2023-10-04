@@ -21,6 +21,7 @@ func main() {
 	{
 		r.Use(middleware.LoginCheck)
 		r.GET("/account", controller.GetAccount)
+		r.PUT("/account", controller.EditAccount)
 		r.POST("/create_transaction", controller.CreateTransaction)
 
 	}
