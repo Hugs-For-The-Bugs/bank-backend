@@ -10,11 +10,9 @@ import (
 	"hugsforthebugs/bank-backend/util"
 )
 
-// TransactionRequest 请求参数结构体
+// TransactionRequest
 type TransactionRequest struct {
-	ID                uint64 `json:"id"`
-	Phonenumber       string `json:"phonenumber"`
-	TargetPhonenumber string `json:"Targetphonenumber"`
+	TargetPhoneNumber string `json:"targetPhoneNumber"`
 	Amount            int    `json:"amount"`
 }
 type stateType string
@@ -69,7 +67,7 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 	var toAccount model.Account
-	result = tx.Where("phone = ?", request.TargetPhonenumber).First(&toAccount)
+	result = tx.Where("phone = ?", request.TargetPhoneNumber).First(&toAccount)
 	if result.Error != nil {
 		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
@@ -94,7 +92,7 @@ func CreateTransaction(c *gin.Context) {
 
 	// update the toAccount
 
-	result = tx.Where("phone = ?", request.TargetPhonenumber).First(&toAccount)
+	result = tx.Where("phone = ?", request.TargetPhoneNumber).First(&toAccount)
 	if result.Error != nil {
 		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
