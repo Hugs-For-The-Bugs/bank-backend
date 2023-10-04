@@ -14,6 +14,7 @@ func GetAccount(c *gin.Context) {
 	session := sessions.Default(c)
 	id := session.Get("id")
 	result := util.DB.First(&account, "id =?", id)
+
 	if result.Error == nil && result.RowsAffected == 1 {
 		util.SuccessResponse(c, account)
 	} else {
