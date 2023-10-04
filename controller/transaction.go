@@ -34,7 +34,7 @@ type Transaction struct {
 func CreateTransaction(c *gin.Context) {
 	var request TransactionRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		util.ServerErrorResponse(c, err.Error())
 		return
 	}
 
@@ -56,27 +56,26 @@ func CreateTransaction(c *gin.Context) {
 	}
 	if !fromAccount.Active {
 		tx.Rollback()
-		util.BadRequestResponse(c, "Account not active")
-		c.JSON(http.StatusBadRequest, gin.H{"error": "From account is not active"})
+		util.BadRequestResponse(c, "Account is not active")
 		return
 	}
 
 	if fromAccount.Balance <= request.Amount {
 		tx.Rollback()
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Insufficient balance"})
+		util.BadRequestResponse(c, "Insufficient balance")
 		return
 	}
 	var toAccount model.Account
 	result = tx.Where("phone = ?", request.TargetPhoneNumber).First(&toAccount)
 	if result.Error != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		util.BadRequestResponse(c, "User not found")
 		return
 	}
 
 	if !toAccount.Active {
 		tx.Rollback()
-		c.JSON(http.StatusBadRequest, gin.H{"error": "To account is not active"})
+		util.BadRequestResponse(c, "to Account is not active")
 		return
 	}
 	//Check whether the account is active
@@ -86,7 +85,7 @@ func CreateTransaction(c *gin.Context) {
 	result = tx.Save(&fromAccount)
 	if result.Error != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		util.ServerErrorResponse(c, result.Error.Error())
 		return
 	}
 
@@ -95,7 +94,7 @@ func CreateTransaction(c *gin.Context) {
 	result = tx.Where("phone = ?", request.TargetPhoneNumber).First(&toAccount)
 	if result.Error != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		util.ServerErrorResponse(c, result.Error.Error())
 		return
 	}
 
@@ -103,7 +102,7 @@ func CreateTransaction(c *gin.Context) {
 	result = tx.Save(&toAccount)
 	if result.Error != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		util.ServerErrorResponse(c, result.Error.Error())
 		return
 	}
 
@@ -118,11 +117,11 @@ func CreateTransaction(c *gin.Context) {
 	result = tx.Create(&transaction)
 	if result.Error != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		util.ServerErrorResponse(c, result.Error.Error())
 		return
 	}
 
 	tx.Commit()
 
-	c.JSON(http.StatusOK, gin.H{"message": "Transaction created successfully"})
+	c.JSON(http.StatusOK, gin.H{"msg": "Transaction created successfully"})
 }
