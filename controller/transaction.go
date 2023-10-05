@@ -37,6 +37,10 @@ func CreateTransaction(c *gin.Context) {
 		util.ServerErrorResponse(c, err.Error())
 		return
 	}
+	if request.Amount <= 0 {
+		util.BadRequestResponse(c, "Invalid amount")
+		return
+	}
 
 	// Validation logic is performed here,
 	// such as checking whether the account balance is sufficient
