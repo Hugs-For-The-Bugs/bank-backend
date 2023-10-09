@@ -13,8 +13,9 @@ type TransactionResponse struct {
 	Amount                   string `json:"amount"`
 	State                    string `json:"state"`
 
-	FromPhone string `json:"from_phone"`
-	ToPhone   string `json:"to_phone"`
+	TransactionDate string `json:"transaction_date"`
+	FromPhone       string `json:"from_phone"`
+	ToPhone         string `json:"to_phone"`
 }
 
 func GetTransactions(c *gin.Context) {
@@ -24,12 +25,13 @@ func GetTransactions(c *gin.Context) {
 
 	id := session.Get("id")
 
-	result := util.DB.Raw(`
-SELECT transactions.*, fromAccounts.social_security_number as from_social_security_number, fromAccounts.id, toAccounts.social_security_number as to_social_security_number, fromAccounts.phone as FromPhone,  toAccounts.phone as ToPhone 
+	result := util.DB.Raw(`SELECT transactions.*, transactions.transaction_datetime as TransactionDate, fromAccounts.social_security_number as from_social_security_number, fromAccounts.id, toAccounts.social_security_number as to_social_security_number, fromAccounts.phone as FromPhone,  toAccounts.phone as ToPhone 
 	FROM transactions
 	JOIN accounts AS fromAccounts ON fromAccounts.id = transactions.from_account_id
 	JOIN accounts AS toAccounts ON toAccounts.id = transactions.to_account_id
-	WHERE fromAccounts.id = ? OR toAccounts.id = ?`, id, id).Scan(&transactionResponses)
+	WHERE fromAccounts.id = ? OR toAccounts.id = ?
+	ORDER BY transactions.transaction_datetime DESC
+`, id, id).Scan(&transactionResponses)
 
 	if result.Error == nil {
 		util.SuccessResponse(c, transactionResponses)
