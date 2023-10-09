@@ -29,9 +29,8 @@ func GetTransactions(c *gin.Context) {
 	FROM transactions
 	JOIN accounts AS fromAccounts ON fromAccounts.id = transactions.from_account_id
 	JOIN accounts AS toAccounts ON toAccounts.id = transactions.to_account_id
-	WHERE fromAccounts.id = ? OR toAccounts.id = ?
-	ORDER BY transactions.transaction_datetime DESC
-`, id, id).Scan(&transactionResponses)
+	WHERE (fromAccounts.id = ? AND state = 'Successful') OR (toAccounts.id = ? AND state = 'Successful')
+	ORDER BY transactions.transaction_datetime DESC`, id, id).Scan(&transactionResponses)
 
 	if result.Error == nil {
 		util.SuccessResponse(c, transactionResponses)
