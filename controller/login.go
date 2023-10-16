@@ -12,6 +12,7 @@ import (
 type LoginRequest struct {
 	SocialSecurityNumber string `json:"socialSecurityNumber"`
 	Password             string `json:"password"`
+	Active               bool   `json:"active"`
 }
 
 type responseData struct {
@@ -38,6 +39,8 @@ func Login(c *gin.Context) {
 		util.ServerErrorResponse(c, result.Error.Error())
 	} else if !util.CheckPasswordHash(loginRequest.Password, account.Password) {
 		util.BadRequestResponse(c, "Password incorrect")
+	} else if !account.Active {
+		util.BadRequestResponse(c, "Your account is not activated")
 	} else {
 		session := sessions.Default(c)
 		session.Set("id", account.ID)
