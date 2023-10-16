@@ -12,8 +12,8 @@ import (
 
 // TransactionRequest
 type TransactionRequest struct {
-	TargetPhoneNumber string `json:"targetPhoneNumber"`
-	Amount            int    `json:"amount"`
+	TargetPhoneNumber string  `json:"targetPhoneNumber"`
+	Amount            float64 `json:"amount"`
 }
 type stateType string
 
@@ -26,7 +26,8 @@ type Transaction struct {
 	ID            uint64    `gorm:"primary_key" json:"id"`
 	FromAccountID int       `json:"from_account_id"`
 	ToAccountID   int       `json:"to_account_id"`
-	Amount        int       `json:"amount"`
+	Amount        float64   `json:"amount"`
+	Fee           float64   `json:"fee"`
 	State         stateType `gorm:"type:ENUM('Successful', 'Failed')"`
 }
 
@@ -64,7 +65,7 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	if fromAccount.Balance < request.Amount {
+	if float64(fromAccount.Balance) < float64(request.Amount)*1.01 {
 		tx.Rollback()
 		util.BadRequestResponse(c, "Insufficient balance")
 		return
@@ -84,8 +85,8 @@ func CreateTransaction(c *gin.Context) {
 	}
 	//Check whether the account is active
 
-	// update the fromAccount
-	fromAccount.Balance -= request.Amount
+	// update the Account
+	fromAccount.Balance -= request.Amount * 1.01
 	result = tx.Save(&fromAccount)
 	if result.Error != nil {
 		tx.Rollback()
@@ -116,6 +117,7 @@ func CreateTransaction(c *gin.Context) {
 		FromAccountID: int(fromAccount.ID),
 		ToAccountID:   int(toAccount.ID),
 		Amount:        request.Amount,
+		Fee:           request.Amount * 0.01,
 		State:         Successful,
 	}
 	result = tx.Create(&transaction)
