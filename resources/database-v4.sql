@@ -1,4 +1,5 @@
 -- bank.sql
+DROP DATABASE  bank;
 
 -- Create database
 CREATE DATABASE IF NOT EXISTS bank;
