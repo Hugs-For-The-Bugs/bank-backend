@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS transactions
     to_account_id        INT,
     amount               VARCHAR(50),
     fee                  VARCHAR(50), -- This is the new fee column
-    state                ENUM ('Failed', 'Successful'),
+    state                ENUM ('Successful'),
     transaction_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (from_account_id) REFERENCES accounts (id),
     FOREIGN KEY (to_account_id) REFERENCES accounts (id)
@@ -62,9 +62,9 @@ VALUES ('John', 'Doe', '1990-01-01', '1234567890', 'john@email.com', '1990010112
 -- Insert data into transactions table with datetime
 INSERT INTO transactions (from_account_id, to_account_id, amount,fee, state, transaction_datetime)
 VALUES (1, 2, '100','1' ,'Successful', '2023-09-29 12:34:56'),
-       (2, 3, '50', '0','Failed', '2023-09-29 12:35:00'),
+       (2, 3, '50', '0','Successful', '2023-09-29 12:35:00'),
        (3, 4, '200', '2','Successful', '2023-09-29 12:36:00'),
-       (4, 5, '300', '0','Failed', '2023-09-29 12:37:00'),
+       (4, 5, '300', '0','Successful', '2023-09-29 12:37:00'),
        (5, 1, '400', '4','Successful', '2023-09-29 12:38:00');
 
 -- Insert data into admins table
