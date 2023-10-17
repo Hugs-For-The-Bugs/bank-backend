@@ -11,10 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func EditAccount(c *gin.Context) {
+func EditPassword(c *gin.Context) {
 	session := sessions.Default(c)
 	id := session.Get("id")
-	fmt.Print(id) //1
+	//fmt.Print(id)      //1
 	//fmt.Print(account) //{0  john@email.com John1  1234567890  Doe1 0 false}
 
 	//check if active
@@ -31,18 +31,19 @@ func EditAccount(c *gin.Context) {
 		fmt.Println(err)
 	}
 
-	//only update the fields (firstName, surname, phone, email)
+	//Hash password
+	account.Password = util.HashPassword(account.Password)
+
+	//only update the fields (password)
 	result := util.DB.Model(&model.Account{}).Where("id = ?", id).Updates(model.Account{
-		FirstName: account.FirstName,
-		Surname:   account.Surname,
-		Phone:     account.Phone,
-		Email:     account.Email})
-	//when the user changes nothing, it is affects 0 rows, then return Nothing Changed
+		Password: account.Password,
+	})
+
 	if result.Error == nil {
 		if result.RowsAffected == 1 {
 			util.SuccessResponse(c, account)
 		} else if result.RowsAffected == 0 {
-			util.BadRequestResponse(c, "Nothing changed!")
+			util.BadRequestResponse(c, "Password not changed!")
 		}
 	} else {
 		util.BadRequestResponse(c, "bad request")

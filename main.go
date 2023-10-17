@@ -25,7 +25,7 @@ func main() {
 		r.DELETE("/account", controller.DeactivateAccount)
 		r.POST("/transaction", controller.CreateTransaction)
 		r.GET("/transaction", controller.GetTransactions)
-
+		r.PUT("/account/password", controller.EditPassword)
 	}
 
 	// Start the server
