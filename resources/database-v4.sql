@@ -1,4 +1,5 @@
 -- bank.sql
+DROP DATABASE  bank;
 
 -- Create database
 CREATE DATABASE IF NOT EXISTS bank;
@@ -22,14 +23,13 @@ CREATE TABLE IF NOT EXISTS accounts
 );
 
 -- Create transactions table with a single datetime column
--- Create transactions table with a single datetime column and a fee column
 CREATE TABLE IF NOT EXISTS transactions
 (
     id                   INT PRIMARY KEY AUTO_INCREMENT,
     from_account_id      INT,
     to_account_id        INT,
     amount               VARCHAR(50),
-    fee                  VARCHAR(50), -- This is the new fee column
+    fee                  VARCHAR(50),
     state                ENUM ('Successful'),
     transaction_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (from_account_id) REFERENCES accounts (id),
